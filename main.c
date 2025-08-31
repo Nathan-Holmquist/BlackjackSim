@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 
 int runGame();
+int calculateHandValue(int cards[], int count);
 
 int main(){
 
@@ -43,7 +45,6 @@ int runGame(){
     while (1){
         printf("How much money would you like to bet?\n");
         scanf("%d", P);
-        printf("%d\n", betAmount);
 
         if (betAmount > 10000 || betAmount < 0){
             printf("Bet size invalid\n");
@@ -54,36 +55,71 @@ int runGame(){
         }
     }
 
+    int playerCards[10];   // max 10 cards in hand
+    int playerCount = 0;
+    playerCards[playerCount++] = (rand() % 11) + 1;
+    playerCards[playerCount++] = (rand() % 11) + 1;
     
-    int PCard1 = (rand() % 11) + 1;
-    int PCard2 = (rand() % 11) + 1;
-    int DCard1 = (rand() % 11) + 1;
-    int DCard2 = (rand() % 11) + 1;
 
 
-    // Enumerate the P and D cards
+    // Enumerate the Player(P) and Dealer(D) cards
 
-    // Game loop
-    printf("Dealer is showing a %d\n\n", DCard1);
-    printf("You have a %d and a %d", PCard1, PCard2);
-    printf("Hit(h) or Stand(s): ");
-    char response;
-    char* p = &response;
-    scanf("%c", p);
+    while(1){
 
+        // Game loop
+        printf("Dealer is showing a %d\n\n", DCard1);
+        printf("You have a %d and a %d \n", PCard1, PCard2);
+        printf("Hit(h) Stand(s) Double(d) or Split(t)?: ");
 
-    // TODO : fix this so that you can type them out with strings
-    
-    if (response == 'h'){
+        char response[10];  
+        scanf("%9s", response); 
 
-    } elif (response == 's'){
-        
-    } elif (response == 'd'){
+        // Debug print
+        printf("You typed: %s\n", response);
 
-    } elif (response == 't'){
+        if (strcmp(response, "h") == 0 || strcmp(response, "hit") == 0) {
 
+            printf("You chose to hit.\n");
+            playerCards[playerCount++] = (rand() % 11) + 1;
+
+            printf("You now have: ");
+            for (int i = 0; i < playerCount; i++) {
+                printf("%d ", playerCards[i]);
+            }
+            printf("\n");
+
+        } else if (strcmp(response, "s") == 0 || strcmp(response, "stand") == 0) {
+            printf("yoo");
+        } else if (strcmp(response, "d") == 0 || strcmp(response, "double") == 0) {
+            printf("yooo");
+        } else if (strcmp(response, "t") == 0 || strcmp(response, "split") == 0) {
+            printf("yoooo");
+        } else {
+            printf("Action invalid");
+        }
     }
-
-
-
 }
+
+
+int calculateHandValue(int cards[], int count){
+        int total = 0;
+        int aces = 0;
+
+        for (int i = 0; i < count; i++) {
+            int value = cards[i];
+
+            // If card is Ace
+            if (value == 11) {
+                aces++;
+            }
+            total += value;
+        }
+
+        // Adjust Aces if total > 21
+        while (total > 21 && aces > 0) {
+            total -= 10;  // turn an Ace from 11 into 1`
+            aces--;
+        }
+
+        return total;
+        }
